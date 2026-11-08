@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "Debate": {
+      "title": "Debate",
+      "description": "Configuração e estado em tempo real da sala de debate estudantil.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["waiting", "live", "finished", "closed"] },
+        "currentRound": { "type": "number" },
+        "roundName": { "type": "string", "maxLength": 100 },
+        "currentEixo": { "type": "string", "maxLength": 100 },
+        "currentTopic": { "type": "string", "maxLength": 500 },
+        "activeSpeakerChapaId": { "type": "string", "maxLength": 50 },
+        "activeSpeakerName": { "type": "string", "maxLength": 100 },
+        "turnStartedAt": { "type": "number" },
+        "turnDurationSeconds": { "type": "number" },
+        "scheduledStart": { "type": "string", "maxLength": 50 },
+        "scheduledEnd": { "type": "string", "maxLength": 50 },
+        "chapa1Name": { "type": "string", "maxLength": 100 },
+        "chapa2Name": { "type": "string", "maxLength": 100 },
+        "lotteryWinner": { "type": "string", "maxLength": 50 },
+        "lotterySpinning": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "status", "currentRound"]
+    },
+    "Speech": {
+      "title": "Speech",
+      "description": "Registro de cada fala cronometrada de 2 minutos durante o debate.",
+      "type": "object",
+      "properties": {
+        "debateId": { "type": "string", "maxLength": 64 },
+        "round": { "type": "number" },
+        "roundType": { "type": "string", "maxLength": 50 },
+        "eixo": { "type": "string", "maxLength": 100 },
+        "topic": { "type": "string", "maxLength": 500 },
+        "chapaId": { "type": "string", "maxLength": 50 },
+        "chapaName": { "type": "string", "maxLength": 100 },
+        "speakerUid": { "type": "string", "maxLength": 128 },
+        "speakerName": { "type": "string", "maxLength": 100 },
+        "content": { "type": "string", "maxLength": 4000 },
+        "durationSeconds": { "type": "number" },
+        "wasModerated": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["debateId", "round", "chapaId", "speakerUid", "content"]
+    },
+    "Debater": {
+      "title": "Debater",
+      "description": "Membro credenciado de uma chapa (máximo 3 por chapa) ou mediador.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "chapaId": { "type": "string", "enum": ["chapa1", "chapa2", "mediador"] },
+        "chapaName": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["debater", "moderator"] },
+        "joinedAt": { "type": "string" }
+      },
+      "required": ["userId", "chapaId", "role"]
+    }
+  },
+  "firestore": {
+    "/debates/{debateId}": {
+      "schema": "Debate",
+      "description": "Estado global em tempo real do debate e rodadas ativas."
+    },
+    "/debates/{debateId}/speeches/{speechId}": {
+      "schema": "Speech",
+      "description": "Histórico bruto de discursos de cada turno de 2 minutos."
+    },
+    "/debates/{debateId}/debaters/{debaterId}": {
+      "schema": "Debater",
+      "description": "Integrantes oficiais credenciados das chapas e moderadores."
+    }
+  }
+}

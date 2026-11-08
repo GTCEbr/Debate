@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net default-deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Debate room
+    match /debates/{debateId} {
+      allow get: if isValidId(debateId);
+      allow list: if true;
+      allow create, update: if isValidId(debateId);
+      allow delete: if false;
+
+      // Speeches subcollection
+      match /speeches/{speechId} {
+        allow get: if isValidId(debateId) && isValidId(speechId);
+        allow list: if isValidId(debateId);
+        allow create: if isValidId(debateId) && isValidId(speechId);
+        allow update, delete: if false;
+      }
+
+      // Debaters subcollection
+      match /debaters/{debaterId} {
+        allow get: if isValidId(debateId) && isValidId(debaterId);
+        allow list: if isValidId(debateId);
+        allow create, update: if isValidId(debateId) && isValidId(debaterId);
+        allow delete: if isValidId(debateId) && isValidId(debaterId);
+      }
+    }
+
+    // Connection testing doc
+    match /test/{testId} {
+      allow read, write: if true;
+    }
+  }
+}
