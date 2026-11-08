@@ -1,5 +1,5 @@
 {
-  "name": "ai-studio-applet",
+  "name": "debate",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "clean": "next clean"
+    "clean": "next clean",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@hookform/resolvers": "^5.2.1",
+    "@opennextjs/cloudflare": "^1.20.16",
     "@types/canvas-confetti": "^1.9.0",
     "autoprefixer": "^10.4.21",
     "canvas-confetti": "^1.9.4",
@@ -24,7 +27,8 @@
     "postcss": "^8.5.6",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "wrangler": "^4.158.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.11",
